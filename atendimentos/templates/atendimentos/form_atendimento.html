@@ -1,0 +1,81 @@
+{% extends "atendimentos/base.html" %}
+{% block titulo %}Novo Atendimento{% endblock %}
+{% block conteudo %}
+<div class="page-title"><i class="ti ti-user-plus"></i> Novo Atendimento</div>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    <span class="section-label"><i class="ti ti-friends"></i> Criança / Adolescente</span>
+    <label>Nome completo *</label>
+    <input type="text" name="crianca_nome" required placeholder="Nome da criança ou adolescente">
+    <div class="grid2">
+      <div><label>Data de nascimento *</label><input type="date" name="crianca_data_nascimento" required></div>
+      <div><label>Escola (opcional)</label><input type="text" name="crianca_escola" placeholder="Nome da escola"></div>
+    </div>
+
+    <span class="section-label"><i class="ti ti-user"></i> Responsável / quem trouxe</span>
+    <label>Nome *</label>
+    <input type="text" name="responsavel_nome" required placeholder="Nome do responsável">
+    <div class="grid2">
+      <div><label>Telefone / WhatsApp *</label><input type="tel" name="responsavel_telefone" required placeholder="(81) 99999-9999"></div>
+      <div>
+        <label>Vínculo com a criança *</label>
+        <select name="responsavel_vinculo" required>
+          <option value="">Selecione...</option>
+          <option value="mae">Mãe</option>
+          <option value="pai">Pai</option>
+          <option value="avo">Avó / Avô</option>
+          <option value="tio">Tio / Tia</option>
+          <option value="responsavel_legal">Responsável legal</option>
+          <option value="outro">Vizinho / Outro</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div><label>Bairro / Comunidade</label><input type="text" name="responsavel_bairro" placeholder="Onde a família mora"></div>
+      <div><label>Data de nasc. do responsável</label><input type="date" name="responsavel_data_nascimento"></div>
+    </div>
+
+    <span class="section-label"><i class="ti ti-clipboard-text"></i> Atendimento</span>
+    <label>Tipo de demanda *</label>
+    <div class="tag-grid">
+      <span class="tag" onclick="selectTag(this,'violencia_fisica')">Violência física</span>
+      <span class="tag" onclick="selectTag(this,'violencia_psicologica')">Violência psicológica</span>
+      <span class="tag" onclick="selectTag(this,'negligencia')">Negligência</span>
+      <span class="tag" onclick="selectTag(this,'abandono')">Abandono</span>
+      <span class="tag" onclick="selectTag(this,'evasao_escolar')">Evasão escolar</span>
+      <span class="tag" onclick="selectTag(this,'abuso_sexual')">Abuso sexual</span>
+      <span class="tag" onclick="selectTag(this,'trabalho_infantil')">Trabalho infantil</span>
+      <span class="tag" onclick="selectTag(this,'outro')">Outro</span>
+    </div>
+    <input type="hidden" name="tipo_demanda" id="tipo_demanda_input" required>
+
+    <label>Descrição do atendimento *</label>
+    <textarea name="descricao" required rows="4" placeholder="Descreva o que foi relatado e as providências tomadas..."></textarea>
+
+    <label>Encaminhamento realizado</label>
+    <select name="encaminhamento">
+      <option value="">Nenhum por enquanto</option>
+      <option value="cras">CRAS</option>
+      <option value="creas">CREAS</option>
+      <option value="ubs">UBS / Posto de saúde</option>
+      <option value="delegacia">Delegacia</option>
+      <option value="escola">Escola</option>
+      <option value="mp">Ministério Público</option>
+      <option value="outro">Outro</option>
+    </select>
+
+    <div class="btn-row">
+      <a href="/" class="btn-ghost"><i class="ti ti-x"></i> Cancelar</a>
+      <button type="submit" class="btn-success"><i class="ti ti-device-floppy"></i> Salvar Atendimento</button>
+    </div>
+  </form>
+</div>
+<script>
+function selectTag(el, val) {
+  document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tipo_demanda_input').value = val;
+}
+</script>
+{% endblock %}

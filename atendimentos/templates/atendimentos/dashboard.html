@@ -1,0 +1,112 @@
+{% extends "atendimentos/base.html" %}
+{% block titulo %}Dashboard{% endblock %}
+{% block conteudo %}
+
+<div class="page-title"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+
+{% if criancas_aniversario or responsaveis_aniversario %}
+<div class="alert-aniv">
+  <div class="alert-aniv-side">
+    <svg width="48" height="52" viewBox="0 0 48 52" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:bounce-icon 2s ease-in-out infinite;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.35))">
+  <!-- velas -->
+  <rect x="13" y="6" width="4" height="10" rx="2" fill="#fff9"/>
+  <rect x="21" y="2" width="4" height="12" rx="2" fill="#fff9"/>
+  <rect x="29" y="6" width="4" height="10" rx="2" fill="#fff9"/>
+  <!-- chamas -->
+  <ellipse cx="15" cy="5" rx="2.5" ry="3.5" fill="#fbbf24"/>
+  <ellipse cx="15" cy="4" rx="1.2" ry="2" fill="#fef08a"/>
+  <ellipse cx="23" cy="1" rx="2.5" ry="3.5" fill="#f97316"/>
+  <ellipse cx="23" cy="0" rx="1.2" ry="2" fill="#fef08a"/>
+  <ellipse cx="31" cy="5" rx="2.5" ry="3.5" fill="#fbbf24"/>
+  <ellipse cx="31" cy="4" rx="1.2" ry="2" fill="#fef08a"/>
+  <!-- camada de cima -->
+  <rect x="6" y="18" width="36" height="14" rx="4" fill="white" fill-opacity="0.95"/>
+  <rect x="6" y="18" width="36" height="5" rx="3" fill="#f0fdf4" fill-opacity="0.8"/>
+  <!-- decoração ondulada camada de cima -->
+  <path d="M6 25 Q12 22 18 25 Q24 28 30 25 Q36 22 42 25" stroke="#22c55e" stroke-width="1.5" fill="none"/>
+  <!-- camada de baixo -->
+  <rect x="4" y="32" width="40" height="16" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="4" y="32" width="40" height="6" rx="3" fill="#e0f2fe" fill-opacity="0.8"/>
+  <!-- decoração ondulada camada de baixo -->
+  <path d="M4 40 Q10 37 16 40 Q22 43 28 40 Q34 37 40 40 Q43 38 44 40" stroke="#0d9488" stroke-width="1.5" fill="none"/>
+  <!-- pontinhos decorativos -->
+  <circle cx="14" cy="37" r="2" fill="#22c55e" opacity="0.7"/>
+  <circle cx="22" cy="39" r="1.5" fill="#0d9488" opacity="0.7"/>
+  <circle cx="30" cy="37" r="2" fill="#22c55e" opacity="0.7"/>
+  <circle cx="38" cy="39" r="1.5" fill="#1a2a4a" opacity="0.5"/>
+  <!-- estrelinhas -->
+  <text x="2" y="16" font-size="7" fill="rgba(255,255,255,0.8)">✦</text>
+  <text x="40" y="14" font-size="7" fill="rgba(255,255,255,0.8)">✦</text>
+</svg>
+    <span>Aniv.</span>
+  </div>
+  <div class="alert-aniv-body">
+    <p class="alert-aniv-title">
+      <i class="ti ti-bell-ringing"></i>
+      Aniversários desta semana
+    </p>
+    <ul class="alert-aniv-list">
+      {% for c in criancas_aniversario %}
+      <li class="alert-aniv-item">
+        <i class="ti ti-user"></i>
+        {{ c.nome }}
+        <span class="date">{{ c.data_nascimento|date:"d/m" }}</span>
+        <span class="age">{{ c.idade }} anos</span>
+      </li>
+      {% endfor %}
+      {% for r in responsaveis_aniversario %}
+      <li class="alert-aniv-item">
+        <i class="ti ti-user"></i>
+        {{ r.nome }}
+        <span class="date">{{ r.data_nascimento|date:"d/m" }}</span>
+        <span class="age">{{ r.idade }} anos</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
+<div class="stats-row">
+  <div class="stat stat-1">
+    <div class="stat-icon"><i class="ti ti-folder-open"></i></div>
+    <p class="stat-num">{{ total_abertos }}</p>
+    <p class="stat-label">Casos em aberto</p>
+  </div>
+  <div class="stat stat-2">
+    <div class="stat-icon"><i class="ti ti-calendar-check"></i></div>
+    <p class="stat-num">{{ total_mes }}</p>
+    <p class="stat-label">Atendimentos este mês</p>
+  </div>
+  <div class="stat stat-3">
+    <div class="stat-icon"><i class="ti ti-clock"></i></div>
+    <p class="stat-num">{{ total_andamento }}</p>
+    <p class="stat-label">Em andamento</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <p class="card-title"><i class="ti ti-list"></i> Atendimentos Recentes</p>
+    <a href="/atendimentos/" class="btn-ghost btn-sm"><i class="ti ti-arrow-right"></i> Ver todos</a>
+  </div>
+  {% if atendimentos_recentes %}
+  <table>
+    <thead><tr><th>Protocolo</th><th>Criança</th><th>Tipo</th><th>Data</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for a in atendimentos_recentes %}
+      <tr onclick="window.location='/atendimentos/{{ a.pk }}/'">
+        <td><span class="td-proto">{{ a.numero_protocolo }}</span></td>
+        <td>{{ a.crianca.nome }}</td>
+        <td>{{ a.get_tipo_demanda_display }}</td>
+        <td>{{ a.data_hora|date:"d/m/Y" }}</td>
+        <td><span class="badge badge-{{ a.status }}">{{ a.get_status_display }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#94a3b8;font-size:14px;text-align:center;padding:28px 0">Nenhum atendimento registrado ainda.</p>
+  {% endif %}
+</div>
+{% endblock %}

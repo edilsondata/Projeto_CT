@@ -1,0 +1,109 @@
+{% extends "atendimentos/base.html" %}
+{% block titulo %}Editar {{ atendimento.numero_protocolo }}{% endblock %}
+{% block conteudo %}
+<div class="page-title"><i class="ti ti-edit"></i> Editar Atendimento — {{ atendimento.numero_protocolo }}</div>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+
+    <span class="section-label"><i class="ti ti-friends"></i> Criança / Adolescente</span>
+    <label>Nome completo *</label>
+    <input type="text" name="crianca_nome" value="{{ atendimento.crianca.nome }}" required>
+    <div class="grid2">
+      <div>
+        <label>Data de nascimento *</label>
+        <input type="date" name="crianca_data_nascimento" value="{{ atendimento.crianca.data_nascimento|date:'Y-m-d' }}" required>
+      </div>
+      <div>
+        <label>Escola (opcional)</label>
+        <input type="text" name="crianca_escola" value="{{ atendimento.crianca.escola }}">
+      </div>
+    </div>
+
+    <span class="section-label"><i class="ti ti-user"></i> Responsável / quem trouxe</span>
+    <label>Nome *</label>
+    <input type="text" name="responsavel_nome" value="{{ atendimento.responsavel.nome }}" required>
+    <div class="grid2">
+      <div>
+        <label>Telefone / WhatsApp *</label>
+        <input type="tel" name="responsavel_telefone" value="{{ atendimento.responsavel.telefone }}" required>
+      </div>
+      <div>
+        <label>Vínculo com a criança *</label>
+        <select name="responsavel_vinculo" required>
+          <option value="mae" {% if atendimento.responsavel.vinculo == 'mae' %}selected{% endif %}>Mãe</option>
+          <option value="pai" {% if atendimento.responsavel.vinculo == 'pai' %}selected{% endif %}>Pai</option>
+          <option value="avo" {% if atendimento.responsavel.vinculo == 'avo' %}selected{% endif %}>Avó / Avô</option>
+          <option value="tio" {% if atendimento.responsavel.vinculo == 'tio' %}selected{% endif %}>Tio / Tia</option>
+          <option value="responsavel_legal" {% if atendimento.responsavel.vinculo == 'responsavel_legal' %}selected{% endif %}>Responsável legal</option>
+          <option value="outro" {% if atendimento.responsavel.vinculo == 'outro' %}selected{% endif %}>Vizinho / Outro</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>Bairro / Comunidade</label>
+        <input type="text" name="responsavel_bairro" value="{{ atendimento.responsavel.bairro }}">
+      </div>
+      <div>
+        <label>Data de nasc. do responsável</label>
+        <input type="date" name="responsavel_data_nascimento" value="{{ atendimento.responsavel.data_nascimento|date:'Y-m-d' }}">
+      </div>
+    </div>
+
+    <span class="section-label"><i class="ti ti-clipboard-text"></i> Atendimento</span>
+    <label>Tipo de demanda *</label>
+    <div class="tag-grid">
+      <span class="tag {% if atendimento.tipo_demanda == 'violencia_fisica' %}active{% endif %}" onclick="selectTag(this,'violencia_fisica')">Violência física</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'violencia_psicologica' %}active{% endif %}" onclick="selectTag(this,'violencia_psicologica')">Violência psicológica</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'negligencia' %}active{% endif %}" onclick="selectTag(this,'negligencia')">Negligência</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'abandono' %}active{% endif %}" onclick="selectTag(this,'abandono')">Abandono</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'evasao_escolar' %}active{% endif %}" onclick="selectTag(this,'evasao_escolar')">Evasão escolar</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'abuso_sexual' %}active{% endif %}" onclick="selectTag(this,'abuso_sexual')">Abuso sexual</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'trabalho_infantil' %}active{% endif %}" onclick="selectTag(this,'trabalho_infantil')">Trabalho infantil</span>
+      <span class="tag {% if atendimento.tipo_demanda == 'outro' %}active{% endif %}" onclick="selectTag(this,'outro')">Outro</span>
+    </div>
+    <input type="hidden" name="tipo_demanda" id="tipo_demanda_input" value="{{ atendimento.tipo_demanda }}">
+
+    <label>Descrição do atendimento *</label>
+    <textarea name="descricao" required rows="4">{{ atendimento.descricao }}</textarea>
+
+    <div class="grid2">
+      <div>
+        <label>Encaminhamento realizado</label>
+        <select name="encaminhamento">
+          <option value="" {% if not atendimento.encaminhamento %}selected{% endif %}>Nenhum por enquanto</option>
+          <option value="cras" {% if atendimento.encaminhamento == 'cras' %}selected{% endif %}>CRAS</option>
+          <option value="creas" {% if atendimento.encaminhamento == 'creas' %}selected{% endif %}>CREAS</option>
+          <option value="ubs" {% if atendimento.encaminhamento == 'ubs' %}selected{% endif %}>UBS / Posto de saúde</option>
+          <option value="delegacia" {% if atendimento.encaminhamento == 'delegacia' %}selected{% endif %}>Delegacia</option>
+          <option value="escola" {% if atendimento.encaminhamento == 'escola' %}selected{% endif %}>Escola</option>
+          <option value="mp" {% if atendimento.encaminhamento == 'mp' %}selected{% endif %}>Ministério Público</option>
+          <option value="outro" {% if atendimento.encaminhamento == 'outro' %}selected{% endif %}>Outro</option>
+        </select>
+      </div>
+      <div>
+        <label>Status do caso *</label>
+        <select name="status" required>
+          <option value="aberto" {% if atendimento.status == 'aberto' %}selected{% endif %}>Aberto</option>
+          <option value="em_andamento" {% if atendimento.status == 'em_andamento' %}selected{% endif %}>Em andamento</option>
+          <option value="encerrado" {% if atendimento.status == 'encerrado' %}selected{% endif %}>Encerrado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <a href="/atendimentos/{{ atendimento.pk }}/" class="btn-ghost"><i class="ti ti-arrow-left"></i> Cancelar</a>
+      <button type="submit" class="btn-success"><i class="ti ti-device-floppy"></i> Salvar alterações</button>
+    </div>
+  </form>
+</div>
+
+<script>
+function selectTag(el, val) {
+  document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tipo_demanda_input').value = val;
+}
+</script>
+{% endblock %}

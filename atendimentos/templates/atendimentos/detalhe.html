@@ -1,0 +1,73 @@
+{% extends "atendimentos/base.html" %}
+{% block titulo %}{{ atendimento.numero_protocolo }}{% endblock %}
+{% block conteudo %}
+<div class="page-title"><i class="ti ti-file-text"></i> Ficha de Atendimento</div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f1f5f9">
+    <div>
+      <p style="font-size:12px;color:#64748b;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;display:flex;align-items:center;gap:5px">
+        <i class="ti ti-calendar" style="font-size:14px"></i> {{ atendimento.data_hora|date:"d/m/Y — H:i" }}
+      </p>
+      <p style="font-size:26px;font-weight:800;color:#1a2a4a;letter-spacing:-0.03em">{{ atendimento.numero_protocolo }}</p>
+    </div>
+    <span class="badge badge-{{ atendimento.status }}" style="font-size:12px;padding:6px 16px;margin-top:6px">{{ atendimento.get_status_display }}</span>
+  </div>
+
+  <span class="section-label"><i class="ti ti-friends"></i> Criança / Adolescente</span>
+  <p style="font-size:17px;font-weight:800;color:#1a2a4a;margin:10px 0 4px">{{ atendimento.crianca.nome }} — {{ atendimento.crianca.idade }} anos</p>
+  <p style="font-size:13px;color:#64748b;display:flex;align-items:center;gap:6px">
+    <i class="ti ti-calendar" style="font-size:14px"></i> Nascimento: {{ atendimento.crianca.data_nascimento|date:"d/m/Y" }}
+    {% if atendimento.crianca.escola %} &nbsp;·&nbsp; <i class="ti ti-school" style="font-size:14px"></i> {{ atendimento.crianca.escola }}{% endif %}
+  </p>
+
+  <span class="section-label"><i class="ti ti-user"></i> Responsável</span>
+  <p style="font-size:17px;font-weight:800;color:#1a2a4a;margin:10px 0 4px">
+    {{ atendimento.responsavel.nome }}
+    <span style="font-size:13px;font-weight:500;color:#64748b">({{ atendimento.responsavel.get_vinculo_display }})</span>
+  </p>
+  <p style="font-size:13px;color:#64748b;display:flex;align-items:center;gap:6px">
+    <i class="ti ti-phone" style="font-size:14px"></i> {{ atendimento.responsavel.telefone }}
+    {% if atendimento.responsavel.bairro %} &nbsp;·&nbsp; <i class="ti ti-map-pin" style="font-size:14px"></i> {{ atendimento.responsavel.bairro }}{% endif %}
+  </p>
+
+  <span class="section-label"><i class="ti ti-clipboard-text"></i> Atendimento</span>
+  <p style="margin:10px 0 8px;display:flex;align-items:center;gap:8px">
+    <i class="ti ti-tag" style="font-size:16px;color:#64748b"></i>
+    <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase">Tipo:</span>
+    <span style="font-weight:700;color:#1a4a8a;font-size:15px">{{ atendimento.get_tipo_demanda_display }}</span>
+  </p>
+  {% if atendimento.encaminhamento %}
+  <p style="margin-bottom:10px;display:flex;align-items:center;gap:8px">
+    <i class="ti ti-send" style="font-size:16px;color:#64748b"></i>
+    <span style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase">Encaminhamento:</span>
+    <span style="font-weight:600;color:#374151">{{ atendimento.get_encaminhamento_display }}</span>
+  </p>
+  {% endif %}
+  <p style="font-size:14px;color:#374151;line-height:1.7;margin-top:10px">{{ atendimento.descricao }}</p>
+
+  <div class="btn-row">
+    <a href="/atendimentos/" class="btn-ghost"><i class="ti ti-arrow-left"></i> Voltar</a>
+    <a href="/atendimentos/{{ atendimento.pk }}/editar/" class="btn-warning"><i class="ti ti-edit"></i> Editar</a>
+    <a href="/atendimentos/{{ atendimento.pk }}/pdf/" target="_blank" class="btn-primary"><i class="ti ti-file-type-pdf"></i> Gerar PDF</a>
+  </div>
+</div>
+
+{% if historico %}
+<div class="card">
+  <p class="card-title" style="margin-bottom:16px"><i class="ti ti-history"></i> Outros atendimentos desta criança</p>
+  <table>
+    <thead><tr><th>Protocolo</th><th>Tipo</th><th>Data</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for h in historico %}
+      <tr onclick="window.location='/atendimentos/{{ h.pk }}/'">
+        <td><span class="td-proto">{{ h.numero_protocolo }}</span></td>
+        <td>{{ h.get_tipo_demanda_display }}</td>
+        <td>{{ h.data_hora|date:"d/m/Y" }}</td>
+        <td><span class="badge badge-{{ h.status }}">{{ h.get_status_display }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

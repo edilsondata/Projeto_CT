@@ -1,0 +1,44 @@
+{% extends "atendimentos/base.html" %}
+{% block titulo %}{{ acao }} Usuário{% endblock %}
+{% block conteudo %}
+<div class="page-title"><i class="ti ti-user-plus"></i> {{ acao }} Usuário</div>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    <span class="section-label"><i class="ti ti-id-badge"></i> Dados do usuário</span>
+    <div class="grid2">
+      <div><label>Nome *</label><input type="text" name="first_name" value="{{ usuario.first_name|default:'' }}" placeholder="Nome" required></div>
+      <div><label>Sobrenome</label><input type="text" name="last_name" value="{{ usuario.last_name|default:'' }}" placeholder="Sobrenome"></div>
+    </div>
+    <label>Login (usuário) *</label>
+    <input type="text" name="username" value="{{ usuario.username|default:'' }}" placeholder="Ex: joao.silva" {% if acao == 'Editar' %}readonly style="opacity:0.6"{% else %}required{% endif %}>
+
+    <span class="section-label"><i class="ti ti-lock"></i> Senha</span>
+    {% if acao == 'Editar' %}
+    <p style="font-size:12px;color:#64748b;margin-bottom:10px">Deixe em branco para manter a senha atual.</p>
+    {% endif %}
+    <div class="grid2">
+      <div><label>{% if acao == 'Editar' %}Nova senha{% else %}Senha *{% endif %}</label>
+        <input type="password" name="password" placeholder="Digite a senha" {% if acao == 'Novo' %}required{% endif %}></div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:2px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:14px;margin-top:14px">
+          <input type="checkbox" name="is_superuser" style="width:auto;height:auto;margin:0" {% if usuario.is_superuser %}checked{% endif %}>
+          É administrador?
+        </label>
+      </div>
+    </div>
+
+    {% if acao == 'Editar' %}
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:14px;margin-top:14px">
+      <input type="checkbox" name="is_active" style="width:auto;height:auto;margin:0" {% if usuario.is_active %}checked{% endif %}>
+      Usuário ativo
+    </label>
+    {% endif %}
+
+    <div class="btn-row">
+      <a href="/usuarios/" class="btn-ghost"><i class="ti ti-arrow-left"></i> Voltar</a>
+      <button type="submit" class="btn-success"><i class="ti ti-device-floppy"></i> Salvar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

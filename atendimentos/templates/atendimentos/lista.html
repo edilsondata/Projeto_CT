@@ -1,0 +1,42 @@
+{% extends "atendimentos/base.html" %}
+{% block titulo %}Atendimentos{% endblock %}
+{% block conteudo %}
+<div class="page-title"><i class="ti ti-clipboard-list"></i> Atendimentos</div>
+<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+  <form method="get" style="display:flex;gap:10px;flex:1;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ busca }}" placeholder="Buscar por nome, protocolo ou responsável..." style="flex:1;min-width:200px">
+    <select name="status" style="width:190px">
+      <option value="">Todos os status</option>
+      <option value="aberto" {% if status_filtro == 'aberto' %}selected{% endif %}>Aberto</option>
+      <option value="em_andamento" {% if status_filtro == 'em_andamento' %}selected{% endif %}>Em andamento</option>
+      <option value="encerrado" {% if status_filtro == 'encerrado' %}selected{% endif %}>Encerrado</option>
+    </select>
+    <button type="submit" class="btn-primary"><i class="ti ti-search"></i> Filtrar</button>
+  </form>
+</div>
+<div class="card" style="padding:0">
+  <table>
+    <thead>
+      <tr>
+        <th style="padding:14px 0 14px 26px">Protocolo</th>
+        <th>Criança</th><th>Responsável</th><th>Tipo</th><th>Data</th>
+        <th style="padding-right:26px">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in atendimentos %}
+      <tr onclick="window.location='/atendimentos/{{ a.pk }}/'">
+        <td style="padding-left:26px"><span class="td-proto">{{ a.numero_protocolo }}</span></td>
+        <td>{{ a.crianca.nome }}</td>
+        <td>{{ a.responsavel.nome }}</td>
+        <td>{{ a.get_tipo_demanda_display }}</td>
+        <td>{{ a.data_hora|date:"d/m/Y" }}</td>
+        <td style="padding-right:26px"><span class="badge badge-{{ a.status }}">{{ a.get_status_display }}</span></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:28px">Nenhum atendimento encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
