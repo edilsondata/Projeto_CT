@@ -123,3 +123,6 @@ STATIC_URL = 'static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# CSRF para Railway
+CSRF_TRUSTED_ORIGINS = ['https://projetoct-production.up.railway.app', 'https://*.railway.app']
