@@ -172,6 +172,8 @@
 /* Desktop — esconder elementos mobile */
 .nav-hamburger { display: none; }
 .mobile-menu { display: none; }
+.nav-links-desktop { display: flex; align-items: center; gap: 6px; }
+.nav-user-desktop { display: flex; align-items: center; gap: 8px; margin-left: 12px; padding-left: 16px; border-left: 1.5px solid #e2e8f0; }
 
 /* ===== RESPONSIVIDADE MOBILE ===== */
 @media (max-width: 768px) {
@@ -179,9 +181,10 @@
   /* Nav mobile */
   nav { padding: 0 16px; height: 56px; gap: 0; }
   .nav-logo { font-size: 14px; }
-  .nav-links-desktop { display: none; }
-  .nav-btn { display: none; }
-  .nav-user-desktop { display: none; }
+  .nav-links-desktop { display: none !important; }
+  .nav-btn { display: none !important; }
+  .nav-user-desktop { display: none !important; }
+  .nav-hamburger { display: flex !important; }
   .nav-hamburger { display: flex; align-items: center; justify-content: center; margin-left: auto; background: none; border: none; cursor: pointer; color: #1a2a4a; font-size: 24px; padding: 8px; }
 
   /* Menu mobile overlay */
@@ -247,7 +250,7 @@
   </a>
 
   <!-- Links desktop -->
-  <div class="nav-links-desktop" style="display:flex;align-items:center;gap:6px">
+  <div class="nav-links-desktop">
     <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
       <i class="ti ti-layout-dashboard"></i> Dashboard
     </a>
@@ -261,7 +264,7 @@
   </a>
 
   <!-- Usuário desktop -->
-  <div class="nav-user-desktop" style="display:flex;align-items:center;gap:8px;margin-left:12px;padding-left:16px;border-left:1.5px solid #e2e8f0">
+  <div class="nav-user-desktop">
     <span style="font-size:12px;color:#64748b;font-weight:600;display:flex;align-items:center;gap:4px">
       <i class="ti ti-user-circle" style="font-size:16px"></i>
       {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}
