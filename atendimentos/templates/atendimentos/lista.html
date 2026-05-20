@@ -18,20 +18,23 @@
   <table>
     <thead>
       <tr>
-        <th style="padding:14px 0 14px 26px">Protocolo</th>
-        <th>Criança</th><th>Responsável</th><th>Tipo</th><th>Data</th>
-        <th style="padding-right:26px">Status</th>
+        <th style="padding:14px 0 14px 16px">Protocolo</th>
+        <th>Criança</th>
+        <th class="col-hide-mobile">Responsável</th>
+        <th class="col-hide-mobile">Tipo</th>
+        <th class="col-hide-mobile">Data</th>
+        <th style="padding-right:16px">Status</th>
       </tr>
     </thead>
     <tbody>
       {% for a in atendimentos %}
       <tr onclick="window.location='/atendimentos/{{ a.pk }}/'">
-        <td style="padding-left:26px"><span class="td-proto">{{ a.numero_protocolo }}</span></td>
+        <td style="padding-left:16px"><span class="td-proto">{{ a.numero_protocolo }}</span></td>
         <td>{{ a.crianca.nome }}</td>
-        <td>{{ a.responsavel.nome }}</td>
-        <td>{{ a.get_tipo_demanda_display }}</td>
-        <td>{{ a.data_hora|date:"d/m/Y" }}</td>
-        <td style="padding-right:26px"><span class="badge badge-{{ a.status }}">{{ a.get_status_display }}</span></td>
+        <td class="col-hide-mobile">{{ a.responsavel.nome }}</td>
+        <td class="col-hide-mobile">{{ a.get_tipo_demanda_display }}</td>
+        <td class="col-hide-mobile">{{ a.data_hora|date:"d/m/Y" }}</td>
+        <td style="padding-right:16px"><span class="badge badge-{{ a.status }}">{{ a.get_status_display }}</span></td>
       </tr>
       {% empty %}
       <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:28px">Nenhum atendimento encontrado.</td></tr>

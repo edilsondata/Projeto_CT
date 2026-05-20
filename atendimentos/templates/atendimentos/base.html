@@ -168,6 +168,74 @@
   .page-title i { color: #22c55e; font-size: 26px; }
   .page-title::before { content:''; display:block; width:5px; height:26px; background: #22c55e; border-radius: 3px; }
 
+
+/* ===== RESPONSIVIDADE MOBILE ===== */
+@media (max-width: 768px) {
+
+  /* Nav mobile */
+  nav { padding: 0 16px; height: 56px; gap: 0; }
+  .nav-logo { font-size: 14px; }
+  .nav-links-desktop { display: none; }
+  .nav-btn { display: none; }
+  .nav-user-desktop { display: none; }
+  .nav-hamburger { display: flex; align-items: center; justify-content: center; margin-left: auto; background: none; border: none; cursor: pointer; color: #1a2a4a; font-size: 24px; padding: 8px; }
+
+  /* Menu mobile overlay */
+  .mobile-menu { display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 100; }
+  .mobile-menu.open { display: block; }
+  .mobile-menu-panel { background: #fff; width: 80%; max-width: 300px; height: 100%; padding: 20px 16px; display: flex; flex-direction: column; gap: 8px; box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+  .mobile-menu-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; font-size: 15px; font-weight: 600; color: #1a2a4a; text-decoration: none; border: none; background: none; cursor: pointer; width: 100%; }
+  .mobile-menu-link:hover { background: #f1f5f9; }
+  .mobile-menu-link i { font-size: 20px; }
+  .mobile-menu-btn { background: #1a2a4a; color: #fff; border-radius: 10px; margin-top: 8px; justify-content: center; }
+  .mobile-menu-divider { height: 0.5px; background: #e2e8f0; margin: 8px 0; }
+  .mobile-menu-user { font-size: 13px; color: #64748b; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+
+  /* Layout */
+  .main { margin: 16px auto; padding: 0 12px; }
+
+  /* Stats — 1 coluna */
+  .stats-row { grid-template-columns: 1fr !important; gap: 10px; }
+
+  /* Cards */
+  .card { padding: 16px; border-radius: 12px; }
+
+  /* Grid 2 colunas vira 1 */
+  .grid2 { grid-template-columns: 1fr !important; gap: 10px; }
+
+  /* Tabela — esconder colunas menos importantes */
+  .col-hide-mobile { display: none; }
+
+  /* Botões maiores */
+  .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-ghost { padding: 13px 18px !important; font-size: 15px !important; min-height: 48px; border-radius: 10px; }
+
+  /* Botão row empilha */
+  .btn-row { flex-direction: column; gap: 8px; }
+  .btn-row a, .btn-row button { width: 100%; justify-content: center; }
+
+  /* Título de página */
+  .page-title { font-size: 18px; margin-bottom: 14px; }
+
+  /* Tags de demanda */
+  .tag-grid { gap: 6px; }
+  .tag { padding: 8px 14px; font-size: 13px; min-height: 40px; display: inline-flex; align-items: center; }
+
+  /* Inputs maiores no mobile */
+  input, select, textarea { padding: 12px 14px; font-size: 15px; }
+
+  /* Alerta aniversário */
+  .alert-aniv-side { width: 56px; }
+  .alert-aniv-title { font-size: 16px; }
+  .alert-aniv-list { flex-direction: column; }
+  .alert-aniv-item { font-size: 13px; }
+
+  /* Seção label */
+  .section-label { font-size: 11px; }
+}
+
+/* Desktop — esconder elementos mobile */
+.nav-hamburger { display: none; }
+.mobile-menu { display: none; }
 </style>
 </head>
 <body>
@@ -176,36 +244,65 @@
     <div class="nav-logo-dot"></div>
     Conselho Tutelar
   </a>
-  <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
-    <i class="ti ti-layout-dashboard"></i> Dashboard
-  </a>
-  <a href="/atendimentos/" class="nav-link {% if '/atendimentos/' in request.path %}active{% endif %}">
-    <i class="ti ti-clipboard-list"></i> Atendimentos
-  </a>
+
+  <!-- Links desktop -->
+  <div class="nav-links-desktop" style="display:flex;align-items:center;gap:6px">
+    <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+      <i class="ti ti-layout-dashboard"></i> Dashboard
+    </a>
+    <a href="/atendimentos/" class="nav-link {% if '/atendimentos/' in request.path %}active{% endif %}">
+      <i class="ti ti-clipboard-list"></i> Atendimentos
+    </a>
+  </div>
+
   <a href="/atendimentos/novo/" class="nav-btn">
     <i class="ti ti-plus"></i> Novo Atendimento
   </a>
-  <div style="display:flex;align-items:center;gap:8px;margin-left:12px;padding-left:16px;border-left:1.5px solid #e2e8f0">
+
+  <!-- Usuário desktop -->
+  <div class="nav-user-desktop" style="display:flex;align-items:center;gap:8px;margin-left:12px;padding-left:16px;border-left:1.5px solid #e2e8f0">
     <span style="font-size:12px;color:#64748b;font-weight:600;display:flex;align-items:center;gap:4px">
       <i class="ti ti-user-circle" style="font-size:16px"></i>
       {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}
     </span>
-    <a href="/minha-senha/" style="font-size:12px;color:#1a2a4a;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e2e8f0;border-radius:6px;transition:all 0.15s"
-       onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+    <a href="/minha-senha/" style="font-size:12px;color:#1a2a4a;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e2e8f0;border-radius:6px;transition:all 0.15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
       <i class="ti ti-lock" style="font-size:14px"></i> Senha
     </a>
     {% if user.is_superuser %}
-    <a href="/usuarios/" style="font-size:12px;color:#1a2a4a;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e2e8f0;border-radius:6px;transition:all 0.15s"
-       onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+    <a href="/usuarios/" style="font-size:12px;color:#1a2a4a;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e2e8f0;border-radius:6px;transition:all 0.15s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
       <i class="ti ti-users" style="font-size:14px"></i> Usuários
     </a>
     {% endif %}
-    <a href="/logout/" style="font-size:12px;color:#be123c;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #fca5a5;border-radius:6px;transition:all 0.15s"
-       onmouseover="this.style.background='#fff1f2'" onmouseout="this.style.background='transparent'">
+    <a href="/logout/" style="font-size:12px;color:#be123c;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #fca5a5;border-radius:6px;transition:all 0.15s" onmouseover="this.style.background='#fff1f2'" onmouseout="this.style.background='transparent'">
       <i class="ti ti-logout" style="font-size:14px"></i> Sair
     </a>
   </div>
+
+  <!-- Botão hamburguer mobile -->
+  <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <i class="ti ti-menu-2" aria-hidden="true"></i>
+  </button>
 </nav>
+
+<!-- Menu mobile -->
+<div class="mobile-menu" id="mobileMenu" onclick="closeMenuOutside(event)">
+  <div class="mobile-menu-panel">
+    <div class="mobile-menu-user">
+      <i class="ti ti-user-circle" style="font-size:20px"></i>
+      {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}
+    </div>
+    <div class="mobile-menu-divider"></div>
+    <a href="/" class="mobile-menu-link" onclick="closeMenu()"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+    <a href="/atendimentos/" class="mobile-menu-link" onclick="closeMenu()"><i class="ti ti-clipboard-list"></i> Atendimentos</a>
+    <a href="/atendimentos/novo/" class="mobile-menu-link mobile-menu-btn" onclick="closeMenu()"><i class="ti ti-plus"></i> Novo Atendimento</a>
+    <div class="mobile-menu-divider"></div>
+    <a href="/minha-senha/" class="mobile-menu-link" onclick="closeMenu()"><i class="ti ti-lock"></i> Trocar senha</a>
+    {% if user.is_superuser %}
+    <a href="/usuarios/" class="mobile-menu-link" onclick="closeMenu()"><i class="ti ti-users"></i> Usuários</a>
+    {% endif %}
+    <a href="/logout/" class="mobile-menu-link" style="color:#be123c" onclick="closeMenu()"><i class="ti ti-logout"></i> Sair</a>
+  </div>
+</div>
 <div class="green-bar"></div>
 <div class="main">
   {% if messages %}
@@ -218,5 +315,17 @@
   {% endif %}
   {% block conteudo %}{% endblock %}
 </div>
+
+<script>
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+function closeMenuOutside(e) {
+  if (e.target === document.getElementById('mobileMenu')) closeMenu();
+}
+</script>
 </body>
 </html>
