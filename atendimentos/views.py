@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
 from datetime import date
 from .models import Atendimento, Crianca, Responsavel
 from .forms import AtendimentoForm
@@ -47,7 +48,6 @@ def editar_atendimento(request, pk):
     atendimento = get_object_or_404(Atendimento, pk=pk)
 
     if request.method == 'POST':
-        # Atualizar criança
         atendimento.crianca.nome = request.POST.get('crianca_nome', '').strip()
         atendimento.crianca.escola = request.POST.get('crianca_escola', '').strip()
         nasc_crianca = request.POST.get('crianca_data_nascimento')
@@ -55,7 +55,6 @@ def editar_atendimento(request, pk):
             atendimento.crianca.data_nascimento = nasc_crianca
         atendimento.crianca.save()
 
-        # Atualizar responsável
         atendimento.responsavel.nome = request.POST.get('responsavel_nome', '').strip()
         atendimento.responsavel.telefone = request.POST.get('responsavel_telefone', '').strip()
         atendimento.responsavel.vinculo = request.POST.get('responsavel_vinculo', '')
@@ -65,7 +64,6 @@ def editar_atendimento(request, pk):
             atendimento.responsavel.data_nascimento = nasc_resp
         atendimento.responsavel.save()
 
-        # Atualizar atendimento
         atendimento.tipo_demanda = request.POST.get('tipo_demanda', '')
         atendimento.descricao = request.POST.get('descricao', '').strip()
         atendimento.encaminhamento = request.POST.get('encaminhamento', '')
@@ -106,3 +104,20 @@ def ficha_pdf(request, pk):
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="ficha_{atendimento.numero_protocolo}.pdf"'
     return response
+
+
+@login_required
+@require_POST
+def atualizar_status(request, pk):
+    atendimento = get_object_or_404(Atendimento, pk=pk)
+    novo_status = request.POST.get('status', '')
+    status_validos = [s[0] for s in Atendimento.STATUS_CHOICES]
+    if novo_status in status_validos:
+        atendimento.status = novo_status
+        atendimento.save()
+        return JsonResponse({
+            'ok': True,
+            'status': novo_status,
+            'status_display': atendimento.get_status_display(),
+        })
+    return JsonResponse({'ok': False, 'erro': 'Status inválido'}, status=400)

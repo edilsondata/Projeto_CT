@@ -17,4 +17,5 @@ urlpatterns = [
     path('atendimentos/<int:pk>/', views.detalhe_atendimento, name='detalhe_atendimento'),
     path('atendimentos/<int:pk>/editar/', views.editar_atendimento, name='editar_atendimento'),
     path('atendimentos/<int:pk>/pdf/', views.ficha_pdf, name='ficha_pdf'),
+    path('atendimentos/<int:pk>/status/', views.atualizar_status, name='atualizar_status'),
 ]
