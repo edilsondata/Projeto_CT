@@ -126,3 +126,6 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 # CSRF para Railway
 CSRF_TRUSTED_ORIGINS = ['https://projetoct-production.up.railway.app', 'https://*.railway.app']
+
+ALLOWED_HOSTS = ['SIGSYS.pythonanywhere.com', '127.0.0.1', 'localhost']
+CSRF_TRUSTED_ORIGINS = ['https://SIGSYS.pythonanywhere.com']
